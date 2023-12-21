@@ -1,1 +1,1 @@
-QAOA-calculation on infinite graph
+# QAOA-calculation on infinite graph
