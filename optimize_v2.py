@@ -150,11 +150,11 @@ def QAOA_opt(p, gamma0, beta0):
 # main
 finish = 0
 for p in range(2, 3):
-    gamma0 = np.full(p, pi/2)  # (gamma_1,gamma_2,...,gamma_p)
-    beta0 = np.full(p, pi/2)  # (beta_1,beta_2,...,beta_p)
+    gamma0 = np.full(p, pi/6)  # (gamma_1,gamma_2,...,gamma_p)
+    beta0 = np.full(p, pi/6)  # (beta_1,beta_2,...,beta_p)
     res = QAOA_opt(p, gamma0, beta0)
 
-    with open("output.txt", "w") as f:
+    with open("output_2_pi6_pi6.txt", "w") as f:
         f.write("layers p = %d\n" % (p))
 
         f.write("optimized gamma: ")

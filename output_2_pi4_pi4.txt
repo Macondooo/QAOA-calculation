@@ -1,0 +1,7 @@
+layers p = 2
+optimized gamma: [0.35047551 0.88988934]
+optimized beta: [0.59473587 0.23788974]
+optimized function: 0.49933414518943275
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+

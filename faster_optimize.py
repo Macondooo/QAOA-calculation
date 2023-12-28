@@ -3,6 +3,18 @@ from math import pi, cos, sin
 import numpy as np
 import cmath
 
+def callback(intermediate_result):
+
+    global finish
+    finish+=1
+    print(finish)
+    print(intermediate_result)
+    print(0.5-objective(intermediate_result))
+    
+    # percentage = round( progress_bar.finish_tasks_number /  1000 * 100)
+    # print("\rprogress: {}%: ".format(percentage), " " * (percentage // 2), end="")
+    # sys.stdout.flush()
+
 def func(a, beta):
     # a: np.array of size (2p+1), (a_1,a_2,...,a_p,a_0,a_{-p},...,a_{-1})
     # beta: np.array of size (p), (beta_1,beta_2,...,beta_p)
@@ -32,6 +44,7 @@ def idx2arr(idx):
 
 # define the objective function
 def objective(x, pre_E_G, pre_E_H):
+    print("called")
     gamma = x[0:p]
     beta = x[p:]
     Gamma = np.hstack((gamma, [0], -gamma[::-1]))
@@ -126,7 +139,7 @@ def QAOA_opt(p, gamma0, beta0):
                     pre_E_H[idx, b_idx, c_idx, d_idx] = a * b + a * c + a * d + b * c
 
     # optimize the objective function
-    res = minimize(objective, x0, bounds=bounds, args=(pre_E_G, pre_E_H))
+    res = minimize(objective, x0, bounds=bounds, args=(pre_E_G, pre_E_H),callback=callback)
 
     return res
 
