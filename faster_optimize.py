@@ -3,8 +3,9 @@ from math import pi, cos, sin
 import numpy as np
 import cmath
 
-def callback(intermediate_result):
+global finish, p, pre_E_G, pre_E_H
 
+def callback(intermediate_result):
     global finish
     finish+=1
     print(finish)
@@ -43,7 +44,7 @@ def idx2arr(idx):
     return a
 
 # define the objective function
-def objective(x, pre_E_G, pre_E_H):
+def objective(x):
     print("called")
     gamma = x[0:p]
     beta = x[p:]
@@ -61,7 +62,9 @@ def objective(x, pre_E_G, pre_E_H):
         f_pre[idx] = func(a, beta)
     # pre-calculation of E_G, E_H
     E_G = np.einsum("k,ijk->ij", Gamma, pre_E_G)
+    E_G = np.exp(-1j * E_G)
     E_H = np.einsum("m,ijklm->ijkl", Gamma, pre_E_H)
+    E_H = np.exp(-1j * E_H)
 
     # calculation of G and H
     for i in range(p):
@@ -103,67 +106,63 @@ def objective(x, pre_E_G, pre_E_H):
     # return res
 
 
-def QAOA_opt(p, gamma0, beta0):
-    # initial points
-    x0 = np.hstack((gamma0, beta0))
-
-    # bounds on gamma and beta
-    bounds = [[0, 2 * pi]] * p + [[0, pi]] * p
-
-    # some pre-calculation
-    pre_E_G = np.empty((1 << (2 * p + 1), 1 << (2 * p + 1), 2 * p + 1), dtype=complex)
-    for idx in range(1 << (2 * p + 1)):
-        a = idx2arr(idx)
-        for sub_idx in range(1 << (2 * p + 1)):
-            b = idx2arr(sub_idx)
-            pre_E_G[idx, sub_idx] = a * b
-
-    pre_E_H = np.empty(
-        (
-            1 << (2 * p + 1),
-            1 << (2 * p + 1),
-            1 << (2 * p + 1),
-            1 << (2 * p + 1),
-            2 * p + 1,
-        ),
-        dtype=complex,
-    )
-    for idx in range(1 << (2 * p + 1)):
-        for b_idx in range(1 << (2 * p + 1)):
-            for c_idx in range(1 << (2 * p + 1)):
-                for d_idx in range(1 << (2 * p + 1)):
-                    a = idx2arr(idx)
-                    b = idx2arr(b_idx)
-                    c = idx2arr(c_idx)
-                    d = idx2arr(d_idx)
-                    pre_E_H[idx, b_idx, c_idx, d_idx] = a * b + a * c + a * d + b * c
-
-    # optimize the objective function
-    res = minimize(objective, x0, bounds=bounds, args=(pre_E_G, pre_E_H),callback=callback)
-
-    return res
-
-
 # main
-for p in range(1, 2):
-    gamma0 = np.full(p, pi / 4)  # (gamma_1,gamma_2,...,gamma_p)
-    beta0 = np.full(p, pi / 4)  # (beta_1,beta_2,...,beta_p)
-    res = QAOA_opt(p, gamma0, beta0)
+finish=0
+p=3
+# some pre-calculation
+pre_E_G = np.empty((1 << (2 * p + 1), 1 << (2 * p + 1), 2 * p + 1), dtype=complex)
+for idx in range(1 << (2 * p + 1)):
+    a = idx2arr(idx)
+    for sub_idx in range(1 << (2 * p + 1)):
+        b = idx2arr(sub_idx)
+        pre_E_G[idx, sub_idx] = a * b
 
-    with open("output.txt", "w") as f:
-        f.write("layers p = %d\n" % (p))
+pre_E_H = np.empty(
+    (
+        1 << (2 * p + 1),
+        1 << (2 * p + 1),
+        1 << (2 * p + 1),
+        1 << (2 * p + 1),
+        2 * p + 1,
+    ),
+    dtype=complex,
+)
+for idx in range(1 << (2 * p + 1)):
+    for b_idx in range(1 << (2 * p + 1)):
+        for c_idx in range(1 << (2 * p + 1)):
+            for d_idx in range(1 << (2 * p + 1)):
+                a = idx2arr(idx)
+                b = idx2arr(b_idx)
+                c = idx2arr(c_idx)
+                d = idx2arr(d_idx)
+                pre_E_H[idx, b_idx, c_idx, d_idx] = a * b + a * c + a * d + b * c
+print("pre-calculations done")
 
-        f.write("optimized gamma: ")
-        f.write(str(res.x[:p]) + "\n")
+gamma0 = np.full(p, pi / 2)  # (gamma_1,gamma_2,...,gamma_p)
+beta0 = np.full(p, pi / 2)  # (beta_1,beta_2,...,beta_p)
+# initial points
+x0 = np.hstack((gamma0, beta0))
+# bounds on gamma and beta
+bounds = [[0, 2 * pi]] * p + [[0, pi]] * p
+# optimize the objective function
+res = minimize(objective, x0, bounds=bounds,callback=callback)
 
-        f.write("optimized beta: ")
-        f.write(str(res.x[p:]) + "\n")
 
-        f.write("optimized function: ")
-        f.write(str(0.5 - res.fun) + "\n")
+# output results
+with open("output.txt", "w") as f:
+    f.write("layers p = %d\n" % (p))
 
-        f.write("Success or not: ")
-        f.write(str(res.success) + "\n")
+    f.write("optimized gamma: ")
+    f.write(str(res.x[:p]) + "\n")
 
-        f.write("Reasons for stopping: ")
-        f.write(res.message + "\n\n")
+    f.write("optimized beta: ")
+    f.write(str(res.x[p:]) + "\n")
+
+    f.write("optimized function: ")
+    f.write(str(0.5 - res.fun) + "\n")
+
+    f.write("Success or not: ")
+    f.write(str(res.success) + "\n")
+
+    f.write("Reasons for stopping: ")
+    f.write(res.message + "\n\n")
