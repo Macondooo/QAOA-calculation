@@ -94,10 +94,10 @@ def objective(x):
 
 # main##################################################################################################################################
 finish=0
-p=2
+p=3
 # Generate arrays a, b, c, d for all indices
 indices = np.arange(1 << (2 * p + 1))
-a = np.array([idx2arr(idx) for idx in indices])
+a = np.array([idx2arr(idx) for idx in indices]).astype(dtype=int)
 # Perform element-wise multiplication and addition using vectorized operations
 pre_E_G = a[:, None] * a #ab
 pre_E_H = a[:, None, None, None] * a[:, None, None] + a[:, None, None, None] * a[:, None] +  a[:, None, None, None] * a + a[:, None, None] * a[:, None]#(ab+ac+ad+bc)
