@@ -60,7 +60,6 @@ def objective(x):
     for idx in range(1 << (2 * p + 1)):
         a = idx2arr(idx)
         f_pre[idx] = func(a, beta)
-
     # pre-calculation of E_G, E_H
     E_G = np.einsum("k,ijk->ij", Gamma, pre_E_G)
     E_G = np.exp(-1j * E_G)
@@ -107,18 +106,36 @@ def objective(x):
     # return res
 
 
-# main##################################################################################################################################
+# main
 finish=0
 p=2
-# Generate arrays a, b, c, d for all indices
-indices = np.arange(1 << (2 * p + 1))
-a = np.array([idx2arr(idx) for idx in indices])
+# some pre-calculation
+pre_E_G = np.empty((1 << (2 * p + 1), 1 << (2 * p + 1), 2 * p + 1), dtype=complex)
+for idx in range(1 << (2 * p + 1)):
+    a = idx2arr(idx)
+    for sub_idx in range(1 << (2 * p + 1)):
+        b = idx2arr(sub_idx)
+        pre_E_G[idx, sub_idx] = a * b
 
-# Perform element-wise multiplication and addition using vectorized operations(ab+ac+ad+bc)
-pre_E_G = a[:, None] * a
-pre_E_H = a[:, None, None, None] * a[:, None, None] + a[:, None, None, None] * a[:, None] +  a[:, None, None, None] * a + a[:, None, None] * a[:, None]
-
-
+pre_E_H = np.empty(
+    (
+        1 << (2 * p + 1),
+        1 << (2 * p + 1),
+        1 << (2 * p + 1),
+        1 << (2 * p + 1),
+        2 * p + 1,
+    ),
+    dtype=complex,
+)
+for idx in range(1 << (2 * p + 1)):
+    for b_idx in range(1 << (2 * p + 1)):
+        for c_idx in range(1 << (2 * p + 1)):
+            for d_idx in range(1 << (2 * p + 1)):
+                a = idx2arr(idx)
+                b = idx2arr(b_idx)
+                c = idx2arr(c_idx)
+                d = idx2arr(d_idx)
+                pre_E_H[idx, b_idx, c_idx, d_idx] = a * b + a * c + a * d + b * c
 print("pre-calculations done")
 
 gamma0 = np.full(p, pi / 6)  # (gamma_1,gamma_2,...,gamma_p)
