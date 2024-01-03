@@ -108,7 +108,7 @@ def objective(x):
 
 # main
 finish=0
-p=3
+p=2
 # some pre-calculation
 pre_E_G = np.empty((1 << (2 * p + 1), 1 << (2 * p + 1), 2 * p + 1), dtype=complex)
 for idx in range(1 << (2 * p + 1)):
@@ -138,8 +138,8 @@ for idx in range(1 << (2 * p + 1)):
                 pre_E_H[idx, b_idx, c_idx, d_idx] = a * b + a * c + a * d + b * c
 print("pre-calculations done")
 
-gamma0 = np.full(p, pi / 2)  # (gamma_1,gamma_2,...,gamma_p)
-beta0 = np.full(p, pi / 2)  # (beta_1,beta_2,...,beta_p)
+gamma0 = np.full(p, pi / 6)  # (gamma_1,gamma_2,...,gamma_p)
+beta0 = np.full(p, pi / 3)  # (beta_1,beta_2,...,beta_p)
 # initial points
 x0 = np.hstack((gamma0, beta0))
 # bounds on gamma and beta
