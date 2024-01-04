@@ -21,6 +21,5 @@ import cmath
 # a=np.zeros(3)
 # a[1]=1+1j
 
-a=np.array([2,2,2])
-a=cmath.exp(-1j*a)
-print(a)
+a = 3+4j
+print(a**2)

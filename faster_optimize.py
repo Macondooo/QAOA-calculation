@@ -2,15 +2,17 @@ from scipy.optimize import minimize, Bounds
 from math import pi, cos, sin
 import numpy as np
 import cmath
+import os
 
-global finish, p, pre_E_G, pre_E_H
 
 def callback(intermediate_result):
     global finish
     finish+=1
-    print(finish)
-    print(intermediate_result)
-    print(0.5-objective(intermediate_result))
+    with open(out_file, "a") as f:
+        f.write("Iterations %d: " %(finish,))
+        f.write("gamma, beta: %s, %s, " %(str(intermediate_result[0:p]), str(intermediate_result[p:])))
+        f.write("cut fraction: %s\n" %(str(0.5-objective(intermediate_result)),))
+        f.flush()
     
     # percentage = round( progress_bar.finish_tasks_number /  1000 * 100)
     # print("\rprogress: {}%: ".format(percentage), " " * (percentage // 2), end="")
@@ -38,14 +40,17 @@ def func(a, beta):
 def idx2arr(idx):
     a = np.zeros(2 * p + 1)
     for i in range(2 * p + 1):
-        a[i] = idx % 2
+        tmp = idx % 2
+        if tmp == 0:
+            a[i] = 1
+        else: a[i] = -1
         idx = idx // 2
 
     return a
 
 # define the objective function
 def objective(x):
-    print("called")
+    # print("called")
     gamma = x[0:p]
     beta = x[p:]
     Gamma = np.hstack((gamma, [0], -gamma[::-1]))
@@ -81,55 +86,65 @@ def objective(x):
         )
 
     res = 0
-
     # first kind of edge
     res+=np.einsum("i,j,i,j,k,i,j,k,ijk->", a[:,p], a[:,p], f_pre, f_pre, f_pre, G[p], G[p], G[p-1], E_1)
-
     # second kind of edge
     res+=np.einsum("i,j,i,j,i,j,ij->", a[:,p], a[:,p], f_pre, f_pre, H[p], H[p], E_2)
 
     return 0.25 * res.real
-    # return res
 
 
-# main##################################################################################################################################
-finish=0
-p=3
+#----------------------------------global parameters and path------------------------------------------
+p = 3
+out_file = "output_p3.txt"
+if os.path.exists(out_file):
+	os.remove(out_file)
+# ---------------------------------initial points-------------------------------------------------------
+# initial point for p = 1
+# gamma=np.array([[0.6],[pi/2],[pi/2],[pi/4],[pi/6],[pi/8],[pi/4],[pi/6],[pi/8],[0],[pi/3]])
+# beta=np.array([[pi/8],[pi/2],[pi/4],[pi/2],[pi/8],[pi/8],[pi/4],[pi/6],[0],   [0],[pi/3]])
+
+# initial point for p = 2
+# gamma = np.array([[0.3817, 0.6655],[pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[pi/8,pi/6],[pi/8,pi/6]])  # (gamma_1,gamma_2,...,gamma_p)
+# beta = np.array([[0.4960, 0.2690], [pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[0,pi/3],[0,pi/4]])  # (beta_1,beta_2,...,beta_p)
+
+# initial point for p = 3
+gamma = np.array([[0.3297, 0.5688, 0.6406],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/4,pi/3,pi/3],[pi/8,pi/8,pi/8]])  # (gamma_1,gamma_2,...,gamma_p)
+beta =  np.array([[0.5500, 0.3675, 0.2109],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/8,pi/8,pi/8],[pi/3,pi/4,pi/8]])  # (beta_1,beta_2,...,beta_p)
+
+#---------------------------------preprocessing---------------------------------------------------------
 # Generate arrays a, b, c, d for all indices
 indices = np.arange(1 << (2 * p + 1))
-a = np.array([idx2arr(idx) for idx in indices]).astype(dtype=int)
+a = np.array([idx2arr(idx) for idx in indices]).astype(dtype=np.int8)
 # Perform element-wise multiplication and addition using vectorized operations
 pre_E_G = a[:, None] * a #ab
 pre_E_H = a[:, None, None, None] * a[:, None, None] + a[:, None, None, None] * a[:, None] +  a[:, None, None, None] * a + a[:, None, None] * a[:, None]#(ab+ac+ad+bc)
 pre_E_1 = a[:, None, None] * a[:, None] + a[:, None, None] * a + a[:, None] * a #ab+ac+bc
+print("pre-calculations done!")
 
-print("pre-calculations done")
+#---------------------------------optimizing------------------------------------------------------------
+with open(out_file, "a") as f:
+    f.write("layers p = %d\n\n" % (p))
+    f.flush()
+    for gamma0, beta0 in zip(gamma, beta):
+        # initial points
+        x0 = np.hstack((gamma0, beta0))
+        # bounds on gamma and beta
+        bounds = [[0, 2 * pi]] * p + [[0, pi]] * p
 
-gamma0 = np.full(p, pi / 6)  # (gamma_1,gamma_2,...,gamma_p)
-beta0 = np.full(p, pi / 3)  # (beta_1,beta_2,...,beta_p)
-# initial points
-x0 = np.hstack((gamma0, beta0))
-# bounds on gamma and beta
-bounds = [[0, 2 * pi]] * p + [[0, pi]] * p
-# optimize the objective function
-res = minimize(objective, x0, bounds=bounds,callback=callback)
+        f.write("Initially:    ")
+        f.write("gamma, beta: %s, %s, " %(str(gamma0),str(beta0)))
+        f.write("cut fraction: %s\n" %(str(0.5-objective(x0)),))
+        f.flush()
 
-
-# output results
-with open("output.txt", "w") as f:
-    f.write("layers p = %d\n" % (p))
-
-    f.write("optimized gamma: ")
-    f.write(str(res.x[:p]) + "\n")
-
-    f.write("optimized beta: ")
-    f.write(str(res.x[p:]) + "\n")
-
-    f.write("optimized function: ")
-    f.write(str(0.5 - res.fun) + "\n")
-
-    f.write("Success or not: ")
-    f.write(str(res.success) + "\n")
-
-    f.write("Reasons for stopping: ")
-    f.write(res.message + "\n\n")
+        # optimize the objective function
+        finish = 0
+        res = minimize(objective, x0, bounds=bounds,callback=callback)
+        
+        # output results
+        # f.write("optimized gamma: %s\n" %(str(res.x[:p]),))
+        # f.write("optimized beta: %s\n" %(str(res.x[p:]),))
+        # f.write("optimized function: %s\n" %(str(0.5 - res.fun),))
+        f.write("Success or not: %s\n" %(str(res.success),))
+        f.write("Reasons for stopping: %s\n\n" %(res.message,))
+        f.flush()
