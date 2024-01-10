@@ -10,8 +10,8 @@ def callback(intermediate_result):
     finish+=1
     with open(out_file, "a") as f:
         f.write("Iterations %d: " %(finish,))
-        f.write("gamma, beta: %s, %s, " %(str(intermediate_result[0:p]), str(intermediate_result[p:])))
-        f.write("cut fraction: %s\n" %(str(0.5-objective(intermediate_result)),))
+        f.write("gamma, beta: %s, %s, " %(str(intermediate_result.x[0:p]), str(intermediate_result.x[p:])))
+        f.write("cut fraction: %s\n" %(str(0.5-intermediate_result.fun),))
         f.flush()
     
     # percentage = round( progress_bar.finish_tasks_number /  1000 * 100)
@@ -50,7 +50,7 @@ def idx2arr(idx):
 
 # define the objective function
 def objective(x):
-    # print("called")
+    print("called")
     gamma = x[0:p]
     beta = x[p:]
     Gamma = np.hstack((gamma, [0], -gamma[::-1]))
@@ -95,22 +95,22 @@ def objective(x):
 
 
 #----------------------------------global parameters and path------------------------------------------
-p = 3
-out_file = "output_p3.txt"
+p = 2
+out_file = "output_p2.txt"
 if os.path.exists(out_file):
 	os.remove(out_file)
 # ---------------------------------initial points-------------------------------------------------------
-# initial point for p = 1
+# p = 1
 # gamma=np.array([[0.6],[pi/2],[pi/2],[pi/4],[pi/6],[pi/8],[pi/4],[pi/6],[pi/8],[0],[pi/3]])
 # beta=np.array([[pi/8],[pi/2],[pi/4],[pi/2],[pi/8],[pi/8],[pi/4],[pi/6],[0],   [0],[pi/3]])
 
-# initial point for p = 2
-# gamma = np.array([[0.3817, 0.6655],[pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[pi/8,pi/6],[pi/8,pi/6]])  # (gamma_1,gamma_2,...,gamma_p)
-# beta = np.array([[0.4960, 0.2690], [pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[0,pi/3],[0,pi/4]])  # (beta_1,beta_2,...,beta_p)
+# p = 2
+gamma = np.array([[0.3817, 0.6655],[pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[pi/8,pi/6],[pi/8,pi/6]])  
+beta = np.array([[0.4960, 0.2690], [pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[0,pi/3],[0,pi/4]])  
 
-# initial point for p = 3
-gamma = np.array([[0.3297, 0.5688, 0.6406],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/4,pi/3,pi/3],[pi/8,pi/8,pi/8]])  # (gamma_1,gamma_2,...,gamma_p)
-beta =  np.array([[0.5500, 0.3675, 0.2109],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/8,pi/8,pi/8],[pi/3,pi/4,pi/8]])  # (beta_1,beta_2,...,beta_p)
+# p = 3
+# gamma = np.array([[0.3297, 0.5688, 0.6406],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/4,pi/3,pi/3],[pi/8,pi/8,pi/8]])  
+# beta =  np.array([[0.5500, 0.3675, 0.2109],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/8,pi/8,pi/8],[pi/3,pi/4,pi/8]])  
 
 #---------------------------------preprocessing---------------------------------------------------------
 # Generate arrays a, b, c, d for all indices
