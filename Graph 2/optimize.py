@@ -16,22 +16,22 @@ def callback(intermediate_result):
 
 if __name__ == '__main__':
     #----------------------------------global parameters and path------------------------------------------
-    p = 3
-    out_file = "Graph 2/output/p3.txt"
+    p = 1
+    out_file = "Graph 2/output/p1.txt"
     if os.path.exists(out_file):
         os.remove(out_file)
     # ---------------------------------initial guess-------------------------------------------------------
     # p = 1
-    # gamma=np.array([[0.6],[pi/2],[pi/2],[pi/4],[pi/6],[pi/8],[pi/4],[pi/6],[pi/8],[0],[pi/3]])
-    # beta=np.array([[pi/8],[pi/2],[pi/4],[pi/2],[pi/8],[pi/8],[pi/4],[pi/6],[0],   [0],[pi/3]])
+    gamma=np.array([[0.6],[pi/2],[pi/2],[pi/4],[pi/6],[pi/8],[pi/4],[pi/6],[pi/8],[0],[pi/3]])
+    beta=np.array([[pi/8],[pi/2],[pi/4],[pi/2],[pi/8],[pi/8],[pi/4],[pi/6],[0],   [0],[pi/3]])
 
     # p = 2
     # gamma = np.array([[0.3817, 0.6655],[pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[pi/8,pi/6],[pi/8,pi/6]])  
     # beta = np.array([[0.4960, 0.2690], [pi/2,pi/2],[pi/4,pi/4],[pi/8,pi/8],[0,pi/3],[0,pi/4]])  
 
     # # p = 3
-    gamma = np.array([[0.3297, 0.5688, 0.6406],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/4,pi/3,pi/3],[pi/8,pi/8,pi/8]])  
-    beta =  np.array([[0.5500, 0.3675, 0.2109],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/8,pi/8,pi/8],[pi/3,pi/4,pi/8]])  
+    # gamma = np.array([[0.3297, 0.5688, 0.6406],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/4,pi/3,pi/3],[pi/8,pi/8,pi/8]])  
+    # beta =  np.array([[0.5500, 0.3675, 0.2109],[pi/8,pi/8,pi/8],[pi/6,pi/6,pi/6],[pi/8,pi/8,pi/8],[pi/3,pi/4,pi/8]])  
 
     #-----------------------------------preprocessing------------------------------------------------------
     indices = np.arange(1 << (2 * p + 1))
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     # (ab+bc+cd+da)
     pre_E = a[:, None, None, None] * a[:, None, None] + a[:, None, None] * a[:, None] +  a[:, None] * a + a * a[:, None, None, None]
     pre_H1 = a[:,None] * a
+    pre_r1 = a[:, None, None, None] * a[:, None, None] + a[:, None, None] * a[:, None] + a * a[:, None, None, None]
     print("pre-calculations done!")
 
     #------------------------------------output----------------------------------------------------------
@@ -54,12 +55,12 @@ if __name__ == '__main__':
 
             f.write("Initially:    ")
             f.write("gamma, beta: %s, %s, " %(str(gamma0),str(beta0)))
-            f.write("cut fraction: %s\n" %(str(0.5-objective(x0,p,pre_E,pre_H1)),))
+            f.write("cut fraction: %s\n" %(str(0.5-objective(x0,p,pre_E,pre_H1,pre_r1)),))
             f.flush()
 
             # optimize the objective function
             finish = 0
-            res = minimize(objective, x0, args=(p,pre_E,pre_H1), bounds=bounds,callback=callback)
+            res = minimize(objective, x0, args=(p,pre_E,pre_H1,pre_r1), bounds=bounds,callback=callback)
             
             f.write("Success or not: %s\n" %(str(res.success),))
             f.write("Reasons for stopping: %s\n\n" %(res.message,))

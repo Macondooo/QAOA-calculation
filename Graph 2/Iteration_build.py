@@ -3,7 +3,7 @@ from math import pi, cos, sin
 import sys
 
 # define the objective function
-def objective(x,p,pre_E,pre_H1):
+def objective(x,p,pre_E,pre_H1,pre_r1):
     print("called")
     gamma = x[0:p]
     beta = x[p:]
@@ -23,17 +23,21 @@ def objective(x,p,pre_E,pre_H1):
     # pre-calculation of E
     E = np.einsum("m,ijklm->ijkl", Gamma, pre_E)
     E = np.exp(-1j * E)
-    # initialize H[1]
     E_1 = np.einsum("m,ijm->ij", Gamma, pre_H1)
     E_1 = np.exp(-1j * E_1)
+    E_r1 = np.einsum("m,ijklm->ijkl", Gamma, pre_r1)
+    E_r1 = np.exp(-1j * E_r1)
+    # initialize H[1]
     H[1]=np.einsum("b,ab->a", f_pre, E_1)**2
 
     # calculation of H
     for i in range(p-1):
         H[i + 2] = np.einsum(
             "b,c,d,b,d,c,abcd->a", f_pre, f_pre, f_pre, H[i+1], H[i+1], H[i], E)
-
-    res=np.einsum("a,b,a,b,c,d,a,b,c,d,abcd->", a[:,p], a[:,p], f_pre, f_pre, f_pre, f_pre, H[p], H[p], H[p-1], H[p-1], E)
+    if p==1:
+        res=np.einsum("a,b,a,b,c,d,a,b,c,d,abcd->", a[:,p], a[:,p], f_pre, f_pre, f_pre, f_pre, H[p], H[p], H[p-1], H[p-1], E_r1)
+    else:
+        res=np.einsum("a,b,a,b,c,d,a,b,c,d,abcd->", a[:,p], a[:,p], f_pre, f_pre, f_pre, f_pre, H[p], H[p], H[p-1], H[p-1], E)
 
     return 0.5 * res.real
 
