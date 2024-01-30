@@ -32,12 +32,12 @@ def objective(x,p,pre_H,pre_H1,pre_H2,pre_r1):
 
     # initialize H[1], H[2]
     H[1]=np.einsum("b,ab->a", f_pre, E_1)
-    H[2]=np.einsum("b,c,d,abcd->a", f_pre, f_pre, f_pre, E_2)
-
-    # calculation of H
-    for i in range(1,p-1):
-        H[i + 2] = np.einsum(
-            "b,c,d,c,d,abcd->a", f_pre, f_pre, f_pre, H[i], H[i], E_H)
+    if p > 1:
+        H[2]=np.einsum("b,c,d,abcd->a", f_pre, f_pre, f_pre, E_2)
+        # calculation of H
+        for i in range(1,p-1):
+            H[i + 2] = np.einsum(
+                "b,c,d,c,d,abcd->a", f_pre, f_pre, f_pre, H[i], H[i], E_H)
     # edge 1
     res1 = np.einsum("a,b,a,b,c,a,b,c,abc->", a[:,p], a[:,p], f_pre, f_pre, f_pre, H[p], H[p], H[p-1], E_r1)
     # edge 2
@@ -49,7 +49,7 @@ def objective(x,p,pre_H,pre_H1,pre_H2,pre_r1):
 
     
 
-    return 0.5 * res1.real
+    return 1.0/3.0 * res1.real + 0.5/3.0 * res2.real
 
 # convert an integer to (2p+1) bin array
 def idx2arr(idx,p):
