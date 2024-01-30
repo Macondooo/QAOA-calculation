@@ -1,0 +1,84 @@
+layers p = 1
+
+Initially:    gamma, beta: [0.6], [0.39269908], cut fraction: 0.5029113333009617
+Iterations 1: gamma, beta: [0.52737984], [0.39269905], cut fraction: 0.5127214846891776
+Iterations 2: gamma, beta: [0.22931537], [0.39269908], cut fraction: 0.6283032795055816
+Iterations 3: gamma, beta: [0.21455145], [0.39269909], cut fraction: 0.6293453753503313
+Iterations 4: gamma, beta: [0.21009036], [0.39269908], cut fraction: 0.6294019849257081
+Iterations 5: gamma, beta: [0.21026857], [0.39269908], cut fraction: 0.6294020820251534
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [1.57079633], [1.57079633], cut fraction: 0.5
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [1.57079633], [0.78539816], cut fraction: 0.5
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.78539816], [1.57079633], cut fraction: 0.5
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.52359878], [0.39269908], cut fraction: 0.5135316469341318
+Iterations 1: gamma, beta: [0.30484878], [0.39269911], cut fraction: 0.6060307878205176
+Iterations 2: gamma, beta: [0.2280506], [0.39269909], cut fraction: 0.6284426021654144
+Iterations 3: gamma, beta: [0.2032926], [0.39269909], cut fraction: 0.6292497979314498
+Iterations 4: gamma, beta: [0.21051018], [0.39269908], cut fraction: 0.6294018986761185
+Iterations 5: gamma, beta: [0.21027002], [0.39269908], cut fraction: 0.6294020820060084
+Iterations 6: gamma, beta: [0.21026716], [0.39269907], cut fraction: 0.629402082031237
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.39269908], [0.39269908], cut fraction: 0.5625
+Iterations 1: gamma, beta: [0.23537615], [0.39269907], cut fraction: 0.627510000667819
+Iterations 2: gamma, beta: [0.21073122], [0.39269909], cut fraction: 0.6294014136115439
+Iterations 3: gamma, beta: [0.21024147], [0.39269908], cut fraction: 0.629402079979819
+Iterations 4: gamma, beta: [0.21026718], [0.39269906], cut fraction: 0.629402082031237
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.78539816], [0.78539816], cut fraction: 0.5
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.52359878], [0.52359878], cut fraction: 0.51171875
+Iterations 1: gamma, beta: [0.33415574], [0.49653548], cut fraction: 0.5844346822165102
+Iterations 2: gamma, beta: [0.2247147], [0.4477543], cut fraction: 0.6256560225802611
+Iterations 3: gamma, beta: [0.1896489], [0.3953463], cut fraction: 0.6280457291491277
+Iterations 4: gamma, beta: [0.20856042], [0.39759135], cut fraction: 0.6293682423744651
+Iterations 5: gamma, beta: [0.21017406], [0.39383301], cut fraction: 0.6294007240361534
+Iterations 6: gamma, beta: [0.21027835], [0.39271365], cut fraction: 0.6294020814231216
+Iterations 7: gamma, beta: [0.21026707], [0.39269903], cut fraction: 0.6294020820312058
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.39269908], [0.], cut fraction: 0.5
+Iterations 1: gamma, beta: [0.39269908], [0.25000001], cut fraction: 0.5525919378449046
+Iterations 2: gamma, beta: [0.37092215], [0.37601413], cut fraction: 0.5734039619834398
+Iterations 3: gamma, beta: [0.24590168], [0.5935317], cut fraction: 0.5872440295477478
+Iterations 4: gamma, beta: [0.25315319], [0.44070129], cut fraction: 0.6217627727662713
+Iterations 5: gamma, beta: [0.19859766], [0.37364005], cut fraction: 0.6285990234513683
+Iterations 6: gamma, beta: [0.21154567], [0.39337117], cut fraction: 0.6293965458295127
+Iterations 7: gamma, beta: [0.21025536], [0.39276214], cut fraction: 0.629402077482671
+Iterations 8: gamma, beta: [0.21026797], [0.39269416], cut fraction: 0.6294020820041486
+Iterations 9: gamma, beta: [0.21026717], [0.39269904], cut fraction: 0.6294020820312358
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [0.], [0.], cut fraction: 0.5
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
+Initially:    gamma, beta: [1.04719755], [1.04719755], cut fraction: 0.51171875
+Iterations 1: gamma, beta: [1.23664062], [1.07426084], cut fraction: 0.584434696183128
+Iterations 2: gamma, beta: [1.31384258], [1.09965955], cut fraction: 0.6170844223477592
+Iterations 3: gamma, beta: [1.36808814], [1.14866359], cut fraction: 0.6283285185426628
+Iterations 4: gamma, beta: [1.36405445], [1.16616475], cut fraction: 0.6292160002470076
+Iterations 5: gamma, beta: [1.36043944], [1.17809155], cut fraction: 0.6294020570034442
+Iterations 6: gamma, beta: [1.3605389], [1.17810655], cut fraction: 0.6294020816472252
+Iterations 7: gamma, beta: [1.36052916], [1.1780971], cut fraction: 0.629402082031215
+Success or not: True
+Reasons for stopping: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL
+
